@@ -44,12 +44,12 @@ class ActorNetwork(object):
         self.act_grad_weights = tf.compat.v1.placeholder(tf.float32, [None, 1])
 
         # Compute the objective (log action_vector and entropy)
-        self.obj = tf.reduce_sum(tf.multiply(
-                       tf.compat.v1.log(tf.reduce_sum(tf.multiply(self.out, self.acts),
-                                            reduction_indices=1, keep_dims=True)),
-                       -self.act_grad_weights)) \
+        self.obj = tf.compat.v1.reduce_sum(tf.compat.v1.multiply(
+            tf.compat.v1.log(tf.reduce_sum(tf.compat.v1.multiply(self.out, self.acts),
+                                           reduction_indices=1, keepdims=True)),
+            -self.act_grad_weights)) \
                    + ENTROPY_WEIGHT * tf.reduce_sum(tf.multiply(self.out,
-                                                           tf.log(self.out + ENTROPY_EPS)))
+                                                                tf.compat.v1.log(self.out + ENTROPY_EPS)))
 
         # Combine the gradients here
         self.actor_gradients = tf.gradients(self.obj, self.network_params)

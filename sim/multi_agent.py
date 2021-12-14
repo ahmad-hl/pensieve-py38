@@ -15,7 +15,7 @@ S_LEN = 8  # take how many frames in the past
 A_DIM = 6
 ACTOR_LR_RATE = 0.0001
 CRITIC_LR_RATE = 0.001
-NUM_AGENTS = 8
+NUM_AGENTS = 16
 TRAIN_SEQ_LEN = 100  # take as a train batch
 MODEL_SAVE_INTERVAL = 100
 VIDEO_BIT_RATE = [300,750,1200,1850,2850,4300]  # Kbps
@@ -34,7 +34,7 @@ TEST_LOG_FOLDER = './test_results/'
 TRAIN_TRACES = './cooked_traces/'
 # NN_MODEL = './results/pretrain_linear_reward.ckpt'
 NN_MODEL = None
-NN_MODEL = './results/nn_model_ep_318000.ckpt'
+NN_MODEL = './results/nn_model_ep_415900.ckpt'
 
 def testing(epoch, nn_model, log_file):
     # clean up the test results folder
@@ -106,7 +106,7 @@ def central_agent(net_params_queues, exp_queues):
             saver.restore(sess, nn_model)
             print("Model restored.")
 
-        epoch = 318000
+        epoch = 415900
         # assemble experiences from agents, compute the gradients
         while True:
             # synchronize the network parameters of work agent
@@ -256,7 +256,7 @@ def agent(agent_id, all_cooked_time, all_cooked_bw, net_params_queue, exp_queue)
 
             # retrieve previous state
             if len(s_batch) == 0:
-                state = [np.zeros((S_INFO, S_LEN))]
+                state = np.zeros((S_INFO, S_LEN))
             else:
                 state = np.array(s_batch[-1], copy=True)
 

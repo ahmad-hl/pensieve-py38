@@ -44,11 +44,12 @@ class ActorNetwork(object):
         self.act_grad_weights = tf.compat.v1.placeholder(tf.float32, [None, 1])
 
         # Compute the objective (log action_vector and entropy)
-        self.obj = tf.reduce_sum(tf.multiply(
-                       tf.compat.v1.log(tf.reduce_sum(tf.multiply(self.out, self.acts),  keepdims=True)),
-                       -self.act_grad_weights)) \
+        self.obj = tf.compat.v1.reduce_sum(tf.compat.v1.multiply(
+            tf.compat.v1.log(tf.reduce_sum(tf.compat.v1.multiply(self.out, self.acts),
+                                 reduction_indices=1, keepdims=True)),
+            -self.act_grad_weights)) \
                    + ENTROPY_WEIGHT * tf.reduce_sum(tf.multiply(self.out,
-                                                           tf.compat.v1.log(self.out + ENTROPY_EPS)))
+                                                                tf.compat.v1.log(self.out + ENTROPY_EPS)))
 
         # Combine the gradients here
         self.actor_gradients = tf.gradients(self.obj, self.network_params)
@@ -66,7 +67,7 @@ class ActorNetwork(object):
             split_2 = tflearn.conv_1d(inputs[:, 2:3, :], 128, 4, activation='relu')
             split_3 = tflearn.conv_1d(inputs[:, 3:4, :], 128, 4, activation='relu')
             split_4 = tflearn.conv_1d(inputs[:, 4:5, :A_DIM], 128, 4, activation='relu')
-            split_5 = tflearn.fully_connected(inputs[:, 4:5, -1], 128, activation='relu')
+            split_5 = tflearn.fully_connected(inputs[:, 5:6, -1], 128, activation='relu')
 
             split_2_flat = tflearn.flatten(split_2)
             split_3_flat = tflearn.flatten(split_3)
@@ -164,7 +165,7 @@ class CriticNetwork(object):
             split_2 = tflearn.conv_1d(inputs[:, 2:3, :], 128, 4, activation='relu')
             split_3 = tflearn.conv_1d(inputs[:, 3:4, :], 128, 4, activation='relu')
             split_4 = tflearn.conv_1d(inputs[:, 4:5, :A_DIM], 128, 4, activation='relu')
-            split_5 = tflearn.fully_connected(inputs[:, 4:5, -1], 128, activation='relu')
+            split_5 = tflearn.fully_connected(inputs[:, 5:6, -1], 128, activation='relu')
 
             split_2_flat = tflearn.flatten(split_2)
             split_3_flat = tflearn.flatten(split_3)
