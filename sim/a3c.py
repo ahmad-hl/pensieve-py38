@@ -46,7 +46,7 @@ class ActorNetwork(object):
         # Compute the objective (log action_vector and entropy)
         self.obj = tf.compat.v1.reduce_sum(tf.compat.v1.multiply(
             tf.compat.v1.log(tf.reduce_sum(tf.compat.v1.multiply(self.out, self.acts),
-                                 reduction_indices=1, keepdims=True)),
+                                 axis=1, keepdims=True)),
             -self.act_grad_weights)) \
                    + ENTROPY_WEIGHT * tf.reduce_sum(tf.multiply(self.out,
                                                                 tf.compat.v1.log(self.out + ENTROPY_EPS)))
