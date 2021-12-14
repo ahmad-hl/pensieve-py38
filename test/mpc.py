@@ -1,7 +1,6 @@
 import numpy as np
 import fixed_env as env
 import load_trace
-import matplotlib.pyplot as plt
 import itertools
 
 
@@ -61,7 +60,7 @@ def main():
                               all_cooked_bw=all_cooked_bw)
 
     log_path = LOG_FILE + '_' + all_file_names[net_env.trace_idx]
-    log_file = open(log_path, 'wb')
+    log_file = open(log_path, 'w')
 
     time_stamp = 0
 

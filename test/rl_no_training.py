@@ -5,7 +5,6 @@ import tensorflow as tf
 import fixed_env as env
 import a3c
 import load_trace
-import matplotlib.pyplot as plt
 
 
 S_INFO = 6  # bit_rate, buffer_size, next_chunk_size, bandwidth_measurement(throughput and time), chunk_til_video_end

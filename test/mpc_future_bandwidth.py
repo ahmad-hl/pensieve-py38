@@ -1,7 +1,6 @@
 import numpy as np
 import fixed_env as env
 import load_trace
-import matplotlib.pyplot as plt
 import itertools
 
 

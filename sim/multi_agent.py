@@ -2,7 +2,8 @@ import os, time
 import logging
 import numpy as np
 import multiprocessing as mp
-os.environ['CUDA_VISIBLE_DEVICES']=''
+os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
+os.environ["CUDA_VISIBLE_DEVICES"]="0,1"
 import tensorflow as tf
 import env
 import a3c
@@ -33,7 +34,7 @@ TEST_LOG_FOLDER = './test_results/'
 TRAIN_TRACES = './cooked_traces/'
 # NN_MODEL = './results/pretrain_linear_reward.ckpt'
 NN_MODEL = None
-NN_MODEL = './results/nn_model_ep_56400.ckpt'
+NN_MODEL = './results/nn_model_ep_318000.ckpt'
 
 def testing(epoch, nn_model, log_file):
     # clean up the test results folder
@@ -105,7 +106,7 @@ def central_agent(net_params_queues, exp_queues):
             saver.restore(sess, nn_model)
             print("Model restored.")
 
-        epoch = 56400
+        epoch = 318000
         # assemble experiences from agents, compute the gradients
         while True:
             # synchronize the network parameters of work agent
