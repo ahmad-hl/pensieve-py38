@@ -35,6 +35,7 @@ TRAIN_TRACES = './cooked_traces/'
 # NN_MODEL = './results/pretrain_linear_reward.ckpt'
 NN_MODEL = None
 
+
 def testing(epoch, nn_model, log_file):
     # clean up the test results folder
     os.system('rm -r ' + TEST_LOG_FOLDER)
