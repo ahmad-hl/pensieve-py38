@@ -3,7 +3,7 @@ Pensieve is a system that generates adaptive bitrate algorithms using reinforcem
 http://web.mit.edu/pensieve/
 
 ### Prerequisites
-- Install prerequisites (tested with Ubuntu 16.04, Tensorflow v1.1.0, TFLearn v0.3.1 and Selenium v2.39.0)
+- Install prerequisites (tested with Ubuntu 18.04, Tensorflow v2.7.0, TFLearn v0.5.0 but not tested on Selenium)
 ```
 python setup.py
 ```
