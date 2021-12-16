@@ -6,7 +6,7 @@ http://web.mit.edu/pensieve/
 - Create a virtual envirnment with python 3.8
 - Install prerequisites (tested with Ubuntu 18.04, python3.8, Tensorflow v2.7.0, TFLearn v0.5.0 but not tested on Selenium)
 ```
-pip install tensorflow tflearn matplotlib
+pip install tensorflow tflearn matplotlib selenium
 python setup.py
 ```
 
