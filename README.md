@@ -16,7 +16,12 @@ python setup.py
 python multi_agent.py
 ```
 
-The reward signal and meta-setting of video can be modified in `multi_agent.py` and `env.py`. More details can be found in `sim/README.md`.
+The reward signal and meta-setting of video can be modified in `multi_agent.py` and `env.py`.
+Monitoring the testing curve of rewards, entropy and td loss can be done by launching tensorboard from the terminal as follows:
+```
+tensorboard --logdir=path/to/results
+```
+Where path/to/results is in dir `sim`. More details can be found in `sim/README.md`.
 
 ### Testing
 - To test the trained model in simulated environment, first copy over the model to `test/models` and modify the `NN_MODEL` field of `test/rl_no_training.py` , and then in `test/` run `python get_video_sizes.py` and then run 

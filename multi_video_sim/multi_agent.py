@@ -63,7 +63,8 @@ def bitrate_to_action(bitrate, mask, a_dim=A_DIM):
 def testing(epoch, nn_model, log_file):
     # clean up the test results folder
     os.system('rm -r ' + TEST_LOG_FOLDER)
-    os.system('mkdir ' + TEST_LOG_FOLDER)
+    if not os.path.exists(TEST_LOG_FOLDER):
+        os.makedirs(TEST_LOG_FOLDER)
     
     # run test script
     os.system('python rl_test.py ' + nn_model)
