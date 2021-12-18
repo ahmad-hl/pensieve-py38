@@ -33,14 +33,14 @@ LOG_FILE = './results/log'
 TEST_LOG_FOLDER = './test_results/'
 TRAIN_TRACES = './cooked_traces/'
 # NN_MODEL = './results/pretrain_linear_reward.ckpt'
-NN_MODEL = None
-
+# NN_MODEL = None
+NN_MODEL = './results/nn_model_ep_525700.ckpt'
 
 def testing(epoch, nn_model, log_file):
     # clean up the test results folder
     os.system('rm -r ' + TEST_LOG_FOLDER)
-    time.sleep(1)
-    os.system('mkdir ' + TEST_LOG_FOLDER)
+    if not os.path.exists(TEST_LOG_FOLDER):
+        os.makedirs(TEST_LOG_FOLDER)
     # run test script
     os.system('python rl_test.py ' + nn_model)
     
@@ -106,7 +106,7 @@ def central_agent(net_params_queues, exp_queues):
             saver.restore(sess, nn_model)
             print("Model restored.")
 
-        epoch = 0
+        epoch = 525700
         # assemble experiences from agents, compute the gradients
         while True:
             # synchronize the network parameters of work agent
