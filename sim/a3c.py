@@ -5,7 +5,7 @@ import tflearn
 
 GAMMA = 0.99
 A_DIM = 6
-ENTROPY_WEIGHT = 0.5
+ENTROPY_WEIGHT = 4
 ENTROPY_EPS = 1e-6
 S_INFO = 4
 
@@ -284,3 +284,4 @@ def build_summaries():
     summary_ops = tf.compat.v1.summary.merge_all()
 
     return summary_ops, summary_vars
+
