@@ -44,3 +44,7 @@ This script will run all schemes (buffer-based, rate-based, Festive, BOLA, fastM
 python run_exp.py
 ```
 The results will be saved to `real_exp/results` folder. More details can be found in `real_exp/README.md`.
+
+#### Training and cross-validation (testing) Curve using tensorboard
+The RL-model converges after 3 days of continuous training
+TD Loss & Total Reward: <img src="./sim/cross-validation.png">
