@@ -46,5 +46,6 @@ python run_exp.py
 The results will be saved to `real_exp/results` folder. More details can be found in `real_exp/README.md`.
 
 #### Training and cross-validation (testing) Curve using tensorboard
-The RL-model converges after 3 days of continuous training
-TD Loss & Total Reward: <img src="./sim/cross-validation.png">
+The RL-model converges after 3 days of continuous training using training data in `sim/cooked_traces` and testing data in `sim/cooked_test_traces`.
+
+TD Loss & Total Reward of `sim/multi-agent.py`: <img src="./sim/cross-validation.png">
