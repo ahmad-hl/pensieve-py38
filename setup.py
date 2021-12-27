@@ -53,5 +53,5 @@ os.system("mkdir run_exp/results")
 os.system("mkdir real_exp/results")
 
 # need to copy the trace and pre-trained NN model
-print "Need to put trace files in 'pensieve/cooked_traces'."
-print "Need to put pre-trained NN model in 'pensieve/rl_server/results'."
+print("Need to put trace files in 'pensieve/cooked_traces'.")
+print("Need to put pre-trained NN model in 'pensieve/rl_server/results'.")

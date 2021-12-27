@@ -1,3 +1,4 @@
+import datetime
 import os, time
 import logging
 import numpy as np
@@ -38,24 +39,26 @@ NN_MODEL = None
 def testing(epoch, nn_model, log_file):
     # clean up the test results folder
     os.system('rm -r ' + TEST_LOG_FOLDER)
-    time.sleep(1)
-    os.system('mkdir ' + TEST_LOG_FOLDER)
+    if not os.path.exists(TEST_LOG_FOLDER):
+        os.makedirs(TEST_LOG_FOLDER)
     # run test script
     os.system('python rl_test.py ' + nn_model)
     
     # append test performance to the log
-    rewards = []
+    rewards, entropies = [], []
     test_log_files = os.listdir(TEST_LOG_FOLDER)
     for test_log_file in test_log_files:
-        reward = []
+        reward, entropy = [], []
         with open(TEST_LOG_FOLDER + test_log_file, 'r') as f:
             for line in f:
                 parse = line.split()
                 try:
+                    entropy.append(float(parse[-2]))
                     reward.append(float(parse[-1]))
                 except IndexError:
                     break
         rewards.append(np.sum(reward[1:]))
+        entropies.append(np.mean(entropy[1:]))
 
     rewards = np.array(rewards)
     rewards_min = np.min(rewards)
@@ -73,6 +76,8 @@ def testing(epoch, nn_model, log_file):
                    str(rewards_95per) + '\t' +
                    str(rewards_max) + '\n')
     log_file.flush()
+
+    return rewards_mean, np.mean(entropies)
 
 
 def central_agent(net_params_queues, exp_queues):
@@ -96,7 +101,11 @@ def central_agent(net_params_queues, exp_queues):
         summary_ops, summary_vars = a3c.build_summaries()
 
         sess.run(tf.compat.v1.global_variables_initializer())
-        writer = tf.compat.v1.summary.FileWriter(SUMMARY_DIR, sess.graph)  # training monitor
+        curr_time = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+        TRAIN_SUMMARY_DIR = './results/'+curr_time+'/train'
+        TEST_SUMMARY_DIR = './results/'+curr_time+'/test'
+        writer = tf.compat.v1.summary.FileWriter(TRAIN_SUMMARY_DIR, sess.graph)  # training monitor
+        test_writer = tf.compat.v1.summary.FileWriter(TEST_SUMMARY_DIR, sess.graph)  # training monitor
         saver = tf.compat.v1.train.Saver()  # save neural net parameters
 
         # restore neural net parameters
@@ -106,6 +115,8 @@ def central_agent(net_params_queues, exp_queues):
             print("Model restored.")
 
         epoch = 0
+        test_avg_reward, test_avg_entropy, test_avg_td_loss = 0, 0.5, 0
+
         # assemble experiences from agents, compute the gradients
         while True:
             # synchronize the network parameters of work agent
@@ -170,20 +181,30 @@ def central_agent(net_params_queues, exp_queues):
                          ' Avg_reward: ' + str(avg_reward) +
                          ' Avg_entropy: ' + str(avg_entropy))
 
+            #Training summary
             summary_str = sess.run(summary_ops, feed_dict={
                 summary_vars[0]: avg_td_loss,
                 summary_vars[1]: avg_reward,
                 summary_vars[2]: avg_entropy
             })
-
             writer.add_summary(summary_str, epoch)
             writer.flush()
+            # Testing summary
+            summary_str = sess.run(summary_ops, feed_dict={
+                summary_vars[0]: test_avg_td_loss,
+                summary_vars[1]: test_avg_reward,
+                summary_vars[2]: test_avg_entropy
+            })
+
+            test_writer.add_summary(summary_str, epoch)
+            test_writer.flush()
 
             if epoch % MODEL_SAVE_INTERVAL == 0:
                 # Save the neural net parameters to disk.
                 save_path = saver.save(sess, SUMMARY_DIR + "/nn_model_ep_" + str(epoch) + ".ckpt")
                 logging.info("Model saved in file: " + save_path)
-                testing(epoch, SUMMARY_DIR + "/nn_model_ep_" + str(epoch) + ".ckpt", test_log_file)
+                test_avg_reward, test_avg_entropy = testing(epoch, SUMMARY_DIR + "/nn_model_ep_" + str(epoch) + ".ckpt", test_log_file)
+
 
 
 def agent(agent_id, all_cooked_time, all_cooked_bw, net_params_queue, exp_queue):

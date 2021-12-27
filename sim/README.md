@@ -20,3 +20,8 @@ python -m tensorflow.tensorboard --logdir=./results/
 where the plot can be viewed at `localhost:6006` from a browser. 
 
 Trained model will be saved in `sim/results/`. We provided a sample pretrained model with linear QoE as the reward signal. It can be loaded by setting `NN_MODEL = './results/pretrain_linear_reward.ckpt'` in `multi_agent.py`.
+
+#### Training Curve using tensorboard
+TD Loss: <img src="./TD_loss.svg">
+Total Reward: <img src="./Eps_total_reward.svg">
+Avg Entropy: <img src="./Avg_entropy.svg">
