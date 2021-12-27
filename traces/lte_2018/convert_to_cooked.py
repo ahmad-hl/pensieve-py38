@@ -43,9 +43,9 @@ for f in files:
   mean_dl_bitrate = df['DL_bitrate'].mean()
   min_dl_bitrate = df['DL_bitrate'].min()
 
-  if mean_dl_bitrate > FULL_TRACE_BITRATE_FILTER_MAX_AVG or min_dl_bitrate < FULL_TRACE_BITRATE_FILTER_MIN:
-    print("Skipping because too high or low mean bitrate!!")
-    continue
+  #if mean_dl_bitrate > FULL_TRACE_BITRATE_FILTER_MAX_AVG or min_dl_bitrate < FULL_TRACE_BITRATE_FILTER_MIN:
+  #  print("Skipping because too high or low mean bitrate!!")
+  #  continue
 
   jump_time = df.index.min()
   jump_counter = 0
@@ -60,10 +60,14 @@ for f in files:
       df_subset = pd.DataFrame(rolling_subset, columns=["DL_bitrate"])
       # df_subset = df_subset[::-1] 
       
-      subset_mean_dl_bitrate = df_subset['DL_bitrate'].mean()
-      subset_min_dl_bitrate = df_subset['DL_bitrate'].min()
-      if subset_mean_dl_bitrate > SUBTRACE_BITRATE_FILTER_MAX_AVG or subset_min_dl_bitrate < SUBTRACE_BITRATE_FILTER_MIN:
-        print("Skipping because too high or low mean bitrate!!")
+      dl_s = df_subset['DL_bitrate']
+      subset_mean_dl_bitrate = dl_s.mean()
+      subset_min_dl_bitrate = dl_s.min()
+      subset_fraction_zeros = dl_s[dl_s == 0].count()/dl_s.count()
+      #subset_min_dl_bitrate < SUBTRACE_BITRATE_FILTER_MIN or
+      
+      if subset_mean_dl_bitrate > SUBTRACE_BITRATE_FILTER_MAX_AVG or subset_fraction_zeros > 0.10:
+        print("Skipping because too high mean bitrate or too many disconnections (bitrate == 0)!!")
         continue
       
       df_subset['unixtime'] = (df_subset.index - pd.Timestamp('1970-01-01')) // pd.Timedelta('1s')
